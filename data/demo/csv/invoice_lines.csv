@@ -1,0 +1,514 @@
+invoice_line_id,invoice_id,subscription_id,description,quantity,amount
+1,1,69,Monthly plan fee,1,65.0
+2,1,,Late payment fee,2,20.0
+3,2,136,Monthly plan fee,1,550.0
+4,3,149,Monthly plan fee,1,250.0
+5,3,,Late payment fee,1,10.0
+6,3,74,Roaming package,3,480.0
+7,3,74,Data add-on 10 GB,3,360.0
+8,4,144,Monthly plan fee,1,35.0
+9,4,54,International calls,2,32.5
+10,4,54,Device instalment,1,39.0
+11,4,144,Roaming package,3,42.0
+12,5,63,Monthly plan fee,1,99.0
+13,5,,Late payment fee,1,10.0
+14,6,109,Monthly plan fee,1,99.0
+15,6,109,Device instalment,1,59.4
+16,7,68,Monthly plan fee,1,35.0
+17,7,68,Roaming package,2,28.0
+18,7,68,International calls,1,8.75
+19,7,,Late payment fee,2,20.0
+20,8,64,Monthly plan fee,1,250.0
+21,8,64,Device instalment,1,150.0
+22,8,,Late payment fee,3,30.0
+23,8,18,International calls,3,412.5
+24,9,103,Monthly plan fee,1,150.0
+25,10,57,Monthly plan fee,1,65.0
+26,11,131,Monthly plan fee,1,550.0
+27,11,127,International calls,2,100.0
+28,11,51,Roaming package,3,384.0
+29,11,,Late payment fee,2,20.0
+30,12,61,Monthly plan fee,1,65.0
+31,12,,Late payment fee,2,20.0
+32,13,118,Monthly plan fee,1,250.0
+33,13,118,Device instalment,3,450.0
+34,13,118,Data add-on 10 GB,3,225.0
+35,13,118,International calls,1,62.5
+36,14,112,Monthly plan fee,1,200.0
+37,14,31,Device instalment,1,90.0
+38,14,,Late payment fee,2,20.0
+39,15,105,Monthly plan fee,1,99.0
+40,15,105,Data add-on 10 GB,2,59.4
+41,15,105,Device instalment,1,59.4
+42,16,140,Monthly plan fee,1,150.0
+43,16,140,Data add-on 10 GB,3,135.0
+44,16,114,Roaming package,2,120.0
+45,17,68,Monthly plan fee,1,35.0
+46,17,,Late payment fee,1,10.0
+47,17,68,Data add-on 10 GB,2,21.0
+48,18,142,Monthly plan fee,1,99.0
+49,18,142,Data add-on 10 GB,1,29.7
+50,18,142,Roaming package,3,118.8
+51,19,41,Monthly plan fee,1,200.0
+52,20,36,Monthly plan fee,1,250.0
+53,20,36,Device instalment,1,150.0
+54,20,,Late payment fee,3,30.0
+55,20,36,Data add-on 10 GB,3,225.0
+56,21,75,Monthly plan fee,1,65.0
+57,21,75,Roaming package,2,52.0
+58,22,124,Monthly plan fee,1,65.0
+59,22,59,Data add-on 10 GB,3,58.5
+60,22,59,Device instalment,1,39.0
+61,23,93,Monthly plan fee,1,100.0
+62,24,78,Monthly plan fee,1,320.0
+63,25,54,Monthly plan fee,1,65.0
+64,25,54,Data add-on 10 GB,3,58.5
+65,25,54,Roaming package,3,78.0
+66,26,91,Monthly plan fee,1,35.0
+67,26,101,International calls,3,48.75
+68,26,82,Data add-on 10 GB,3,58.5
+69,27,138,Monthly plan fee,1,100.0
+70,28,94,Monthly plan fee,1,200.0
+71,29,36,Monthly plan fee,1,250.0
+72,29,36,Device instalment,2,300.0
+73,29,36,Data add-on 10 GB,2,150.0
+74,29,,Late payment fee,1,10.0
+75,30,102,Monthly plan fee,1,99.0
+76,30,1,Data add-on 10 GB,2,21.0
+77,30,,Late payment fee,3,30.0
+78,31,56,Monthly plan fee,1,320.0
+79,31,123,Roaming package,3,480.0
+80,31,,Late payment fee,1,10.0
+81,31,108,International calls,2,50.0
+82,32,109,Monthly plan fee,1,99.0
+83,32,109,Roaming package,1,39.6
+84,33,49,Monthly plan fee,1,65.0
+85,34,120,Monthly plan fee,1,250.0
+86,34,104,Device instalment,1,60.0
+87,34,120,Data add-on 10 GB,3,225.0
+88,35,98,Monthly plan fee,1,250.0
+89,36,133,Monthly plan fee,1,320.0
+90,37,67,Monthly plan fee,1,99.0
+91,37,,Late payment fee,2,20.0
+92,37,67,Device instalment,2,118.8
+93,38,21,Monthly plan fee,1,320.0
+94,38,,Late payment fee,2,20.0
+95,38,21,Roaming package,3,384.0
+96,38,21,Device instalment,2,384.0
+97,39,143,Monthly plan fee,1,100.0
+98,39,143,International calls,3,75.0
+99,39,143,Device instalment,3,180.0
+100,39,143,Data add-on 10 GB,2,60.0
+101,40,7,Monthly plan fee,1,35.0
+102,40,33,Roaming package,3,42.0
+103,40,7,Data add-on 10 GB,1,10.5
+104,41,125,Monthly plan fee,1,550.0
+105,41,125,International calls,1,137.5
+106,41,,Late payment fee,2,20.0
+107,41,80,Roaming package,2,120.0
+108,42,34,Monthly plan fee,1,100.0
+109,43,91,Monthly plan fee,1,35.0
+110,43,,Late payment fee,2,20.0
+111,43,101,International calls,2,32.5
+112,44,16,Monthly plan fee,1,200.0
+113,45,138,Monthly plan fee,1,100.0
+114,45,138,Data add-on 10 GB,2,60.0
+115,45,,Late payment fee,2,20.0
+116,45,138,International calls,3,75.0
+117,46,137,Monthly plan fee,1,320.0
+118,46,44,International calls,3,240.0
+119,46,44,Roaming package,3,384.0
+120,47,121,Monthly plan fee,1,99.0
+121,48,6,Monthly plan fee,1,400.0
+122,48,,Late payment fee,1,10.0
+123,49,144,Monthly plan fee,1,35.0
+124,49,144,Device instalment,2,42.0
+125,49,54,Data add-on 10 GB,2,39.0
+126,49,144,Roaming package,3,42.0
+127,50,93,Monthly plan fee,1,100.0
+128,50,93,Roaming package,2,80.0
+129,51,78,Monthly plan fee,1,320.0
+130,52,120,Monthly plan fee,1,250.0
+131,52,104,Device instalment,1,60.0
+132,52,,Late payment fee,1,10.0
+133,53,50,Monthly plan fee,1,100.0
+134,53,50,Roaming package,2,80.0
+135,53,,Late payment fee,3,30.0
+136,54,104,Monthly plan fee,1,100.0
+137,54,104,Data add-on 10 GB,2,60.0
+138,54,113,International calls,2,275.0
+139,54,120,Roaming package,1,100.0
+140,55,31,Monthly plan fee,1,150.0
+141,55,31,International calls,3,112.5
+142,56,103,Monthly plan fee,1,150.0
+143,57,68,Monthly plan fee,1,35.0
+144,57,68,Data add-on 10 GB,1,10.5
+145,57,,Late payment fee,3,30.0
+146,58,25,Monthly plan fee,1,100.0
+147,58,48,Roaming package,2,200.0
+148,58,,Late payment fee,1,10.0
+149,59,102,Monthly plan fee,1,99.0
+150,59,,Late payment fee,2,20.0
+151,59,102,International calls,3,74.25
+152,59,134,Roaming package,1,26.0
+153,60,49,Monthly plan fee,1,65.0
+154,61,143,Monthly plan fee,1,100.0
+155,61,143,Device instalment,2,120.0
+156,61,143,International calls,1,25.0
+157,62,128,Monthly plan fee,1,320.0
+158,62,128,Device instalment,1,192.0
+159,63,25,Monthly plan fee,1,100.0
+160,64,20,Monthly plan fee,1,550.0
+161,65,148,Monthly plan fee,1,320.0
+162,65,,Late payment fee,3,30.0
+163,66,21,Monthly plan fee,1,320.0
+164,66,,Late payment fee,1,10.0
+165,66,21,International calls,2,160.0
+166,67,81,Monthly plan fee,1,100.0
+167,67,40,Data add-on 10 GB,1,75.0
+168,67,40,International calls,2,125.0
+169,67,86,Roaming package,1,128.0
+170,68,63,Monthly plan fee,1,99.0
+171,68,63,International calls,3,74.25
+172,69,61,Monthly plan fee,1,65.0
+173,69,,Late payment fee,1,10.0
+174,70,97,Monthly plan fee,1,99.0
+175,70,,Late payment fee,1,10.0
+176,70,97,Data add-on 10 GB,1,29.7
+177,71,105,Monthly plan fee,1,99.0
+178,71,105,Device instalment,3,178.2
+179,71,105,Roaming package,2,79.2
+180,72,110,Monthly plan fee,1,200.0
+181,72,10,International calls,3,412.5
+182,72,,Late payment fee,3,30.0
+183,72,10,Roaming package,2,440.0
+184,73,31,Monthly plan fee,1,150.0
+185,73,139,International calls,3,240.0
+186,74,109,Monthly plan fee,1,99.0
+187,74,,Late payment fee,3,30.0
+188,74,109,Device instalment,3,178.2
+189,75,140,Monthly plan fee,1,150.0
+190,75,140,Roaming package,2,120.0
+191,75,140,International calls,1,37.5
+192,76,99,Monthly plan fee,1,35.0
+193,76,99,Device instalment,2,42.0
+194,76,100,Data add-on 10 GB,1,10.5
+195,76,100,International calls,2,17.5
+196,77,103,Monthly plan fee,1,150.0
+197,78,95,Monthly plan fee,1,35.0
+198,78,95,International calls,1,8.75
+199,79,49,Monthly plan fee,1,65.0
+200,80,91,Monthly plan fee,1,35.0
+201,80,101,Roaming package,3,78.0
+202,80,101,Device instalment,1,39.0
+203,81,63,Monthly plan fee,1,99.0
+204,81,63,Device instalment,3,178.2
+205,81,63,Roaming package,1,39.6
+206,82,78,Monthly plan fee,1,320.0
+207,82,78,Roaming package,2,256.0
+208,82,,Late payment fee,3,30.0
+209,83,148,Monthly plan fee,1,320.0
+210,83,148,Device instalment,1,192.0
+211,84,78,Monthly plan fee,1,320.0
+212,84,78,Data add-on 10 GB,3,288.0
+213,84,78,Device instalment,1,192.0
+214,84,,Late payment fee,2,20.0
+215,85,29,Monthly plan fee,1,320.0
+216,85,70,International calls,1,37.5
+217,86,149,Monthly plan fee,1,250.0
+218,86,,Late payment fee,2,20.0
+219,86,149,Device instalment,2,300.0
+220,87,143,Monthly plan fee,1,100.0
+221,87,143,International calls,1,25.0
+222,87,,Late payment fee,1,10.0
+223,88,104,Monthly plan fee,1,100.0
+224,88,120,International calls,2,125.0
+225,88,120,Device instalment,3,450.0
+226,88,,Late payment fee,3,30.0
+227,89,96,Monthly plan fee,1,550.0
+228,89,,Late payment fee,1,10.0
+229,89,96,Data add-on 10 GB,3,495.0
+230,89,96,International calls,3,412.5
+231,90,2,Monthly plan fee,1,150.0
+232,90,,Late payment fee,1,10.0
+233,90,2,Roaming package,3,180.0
+234,90,2,Data add-on 10 GB,3,135.0
+235,91,115,Monthly plan fee,1,100.0
+236,91,,Late payment fee,1,10.0
+237,91,115,Data add-on 10 GB,1,30.0
+238,92,12,Monthly plan fee,1,65.0
+239,92,130,Data add-on 10 GB,1,19.5
+240,93,38,Monthly plan fee,1,550.0
+241,93,38,Data add-on 10 GB,2,330.0
+242,93,38,Roaming package,1,220.0
+243,94,11,Monthly plan fee,1,400.0
+244,94,11,Device instalment,2,480.0
+245,95,36,Monthly plan fee,1,250.0
+246,95,36,Data add-on 10 GB,1,75.0
+247,95,36,Roaming package,1,100.0
+248,96,94,Monthly plan fee,1,200.0
+249,97,149,Monthly plan fee,1,250.0
+250,97,74,Data add-on 10 GB,2,240.0
+251,98,129,Monthly plan fee,1,35.0
+252,99,133,Monthly plan fee,1,320.0
+253,99,133,International calls,3,240.0
+254,99,133,Device instalment,3,576.0
+255,100,2,Monthly plan fee,1,150.0
+256,100,,Late payment fee,3,30.0
+257,100,2,International calls,2,75.0
+258,100,2,Roaming package,1,60.0
+259,101,109,Monthly plan fee,1,99.0
+260,101,109,Roaming package,1,39.6
+261,101,109,Device instalment,2,118.8
+262,101,,Late payment fee,2,20.0
+263,102,108,Monthly plan fee,1,100.0
+264,103,46,Monthly plan fee,1,100.0
+265,103,,Late payment fee,2,20.0
+266,103,46,International calls,3,75.0
+267,103,46,Data add-on 10 GB,1,30.0
+268,104,148,Monthly plan fee,1,320.0
+269,104,148,International calls,1,80.0
+270,104,,Late payment fee,2,20.0
+271,105,69,Monthly plan fee,1,65.0
+272,105,,Late payment fee,2,20.0
+273,105,69,Roaming package,2,52.0
+274,105,69,International calls,2,32.5
+275,106,42,Monthly plan fee,1,65.0
+276,106,67,International calls,3,74.25
+277,107,111,Monthly plan fee,1,250.0
+278,107,111,Data add-on 10 GB,1,75.0
+279,107,,Late payment fee,1,10.0
+280,107,111,Device instalment,2,300.0
+281,108,147,Monthly plan fee,1,100.0
+282,108,,Late payment fee,3,30.0
+283,109,48,Monthly plan fee,1,250.0
+284,109,48,Roaming package,1,100.0
+285,109,,Late payment fee,3,30.0
+286,109,25,Data add-on 10 GB,3,90.0
+287,110,50,Monthly plan fee,1,100.0
+288,110,,Late payment fee,2,20.0
+289,110,50,Roaming package,3,120.0
+290,111,19,Monthly plan fee,1,400.0
+291,111,,Late payment fee,2,20.0
+292,112,75,Monthly plan fee,1,65.0
+293,113,7,Monthly plan fee,1,35.0
+294,113,7,Roaming package,3,42.0
+295,113,7,Data add-on 10 GB,1,10.5
+296,113,23,Device instalment,3,178.2
+297,114,93,Monthly plan fee,1,100.0
+298,114,117,Roaming package,1,80.0
+299,114,117,Data add-on 10 GB,3,180.0
+300,115,47,Monthly plan fee,1,65.0
+301,115,,Late payment fee,3,30.0
+302,116,118,Monthly plan fee,1,250.0
+303,116,,Late payment fee,1,10.0
+304,117,17,Monthly plan fee,1,99.0
+305,117,17,Data add-on 10 GB,2,59.4
+306,117,55,International calls,1,16.25
+307,117,55,Roaming package,3,78.0
+308,118,105,Monthly plan fee,1,99.0
+309,119,132,Monthly plan fee,1,65.0
+310,119,132,Roaming package,3,78.0
+311,119,60,Data add-on 10 GB,1,19.5
+312,119,132,International calls,1,16.25
+313,120,96,Monthly plan fee,1,550.0
+314,121,81,Monthly plan fee,1,100.0
+315,122,57,Monthly plan fee,1,65.0
+316,123,67,Monthly plan fee,1,99.0
+317,123,67,International calls,2,49.5
+318,123,67,Roaming package,2,79.2
+319,123,67,Data add-on 10 GB,2,59.4
+320,124,15,Monthly plan fee,1,65.0
+321,124,,Late payment fee,3,30.0
+322,125,26,Monthly plan fee,1,150.0
+323,125,,Late payment fee,1,10.0
+324,125,137,International calls,1,80.0
+325,125,26,Roaming package,3,180.0
+326,126,87,Monthly plan fee,1,99.0
+327,126,24,Device instalment,2,42.0
+328,126,87,Data add-on 10 GB,1,29.7
+329,126,,Late payment fee,1,10.0
+330,127,52,Monthly plan fee,1,320.0
+331,127,9,International calls,1,137.5
+332,128,87,Monthly plan fee,1,99.0
+333,128,62,Device instalment,1,59.4
+334,128,24,International calls,1,8.75
+335,129,118,Monthly plan fee,1,250.0
+336,130,129,Monthly plan fee,1,35.0
+337,130,129,Data add-on 10 GB,2,21.0
+338,130,89,Device instalment,2,118.8
+339,131,103,Monthly plan fee,1,150.0
+340,131,103,Roaming package,3,180.0
+341,132,95,Monthly plan fee,1,35.0
+342,132,95,Device instalment,1,21.0
+343,132,,Late payment fee,1,10.0
+344,132,95,International calls,2,17.5
+345,133,103,Monthly plan fee,1,150.0
+346,134,43,Monthly plan fee,1,150.0
+347,134,43,Device instalment,1,90.0
+348,134,,Late payment fee,2,20.0
+349,134,37,Roaming package,1,128.0
+350,135,78,Monthly plan fee,1,320.0
+351,135,78,Device instalment,1,192.0
+352,135,78,Data add-on 10 GB,3,288.0
+353,136,95,Monthly plan fee,1,35.0
+354,136,95,International calls,1,8.75
+355,136,,Late payment fee,2,20.0
+356,136,95,Device instalment,3,63.0
+357,137,140,Monthly plan fee,1,150.0
+358,137,,Late payment fee,3,30.0
+359,137,58,Device instalment,1,150.0
+360,138,48,Monthly plan fee,1,250.0
+361,138,48,International calls,3,187.5
+362,139,71,Monthly plan fee,1,65.0
+363,140,102,Monthly plan fee,1,99.0
+364,140,134,Data add-on 10 GB,2,39.0
+365,140,1,International calls,1,8.75
+366,140,92,Roaming package,2,52.0
+367,141,41,Monthly plan fee,1,200.0
+368,142,64,Monthly plan fee,1,250.0
+369,142,64,Device instalment,1,150.0
+370,142,64,Roaming package,1,100.0
+371,142,18,Data add-on 10 GB,3,495.0
+372,143,16,Monthly plan fee,1,200.0
+373,143,16,Device instalment,1,120.0
+374,144,3,Monthly plan fee,1,150.0
+375,144,84,Roaming package,3,180.0
+376,144,84,International calls,2,75.0
+377,144,3,Data add-on 10 GB,1,45.0
+378,145,142,Monthly plan fee,1,99.0
+379,145,142,Device instalment,1,59.4
+380,146,85,Monthly plan fee,1,200.0
+381,146,85,Data add-on 10 GB,1,60.0
+382,147,108,Monthly plan fee,1,100.0
+383,147,108,Data add-on 10 GB,3,90.0
+384,147,56,Device instalment,1,192.0
+385,148,118,Monthly plan fee,1,250.0
+386,148,118,International calls,1,62.5
+387,148,118,Data add-on 10 GB,2,150.0
+388,149,139,Monthly plan fee,1,320.0
+389,149,139,Data add-on 10 GB,2,192.0
+390,149,31,International calls,3,112.5
+391,149,45,Device instalment,3,576.0
+392,150,80,Monthly plan fee,1,150.0
+393,150,125,Roaming package,3,660.0
+394,150,,Late payment fee,3,30.0
+395,151,143,Monthly plan fee,1,100.0
+396,152,129,Monthly plan fee,1,35.0
+397,152,129,International calls,3,26.25
+398,152,89,Roaming package,1,39.6
+399,152,89,Device instalment,2,118.8
+400,153,3,Monthly plan fee,1,150.0
+401,154,20,Monthly plan fee,1,550.0
+402,154,,Late payment fee,1,10.0
+403,155,149,Monthly plan fee,1,250.0
+404,155,149,Device instalment,1,150.0
+405,155,,Late payment fee,3,30.0
+406,155,149,Data add-on 10 GB,2,150.0
+407,156,63,Monthly plan fee,1,99.0
+408,156,63,International calls,1,24.75
+409,156,63,Device instalment,3,178.2
+410,157,11,Monthly plan fee,1,400.0
+411,157,,Late payment fee,2,20.0
+412,158,97,Monthly plan fee,1,99.0
+413,159,16,Monthly plan fee,1,200.0
+414,159,16,Roaming package,1,80.0
+415,160,135,Monthly plan fee,1,200.0
+416,160,135,Device instalment,3,360.0
+417,160,,Late payment fee,3,30.0
+418,161,96,Monthly plan fee,1,550.0
+419,161,,Late payment fee,1,10.0
+420,161,96,International calls,2,275.0
+421,162,32,Monthly plan fee,1,550.0
+422,163,24,Monthly plan fee,1,35.0
+423,164,141,Monthly plan fee,1,250.0
+424,164,141,Data add-on 10 GB,1,75.0
+425,164,,Late payment fee,2,20.0
+426,164,141,Roaming package,1,100.0
+427,165,110,Monthly plan fee,1,200.0
+428,165,53,Device instalment,1,240.0
+429,165,136,International calls,2,275.0
+430,165,,Late payment fee,3,30.0
+431,166,26,Monthly plan fee,1,150.0
+432,167,124,Monthly plan fee,1,65.0
+433,167,,Late payment fee,2,20.0
+434,168,24,Monthly plan fee,1,35.0
+435,169,67,Monthly plan fee,1,99.0
+436,169,42,International calls,3,48.75
+437,169,,Late payment fee,3,30.0
+438,169,67,Device instalment,3,178.2
+439,170,13,Monthly plan fee,1,99.0
+440,170,47,Roaming package,1,26.0
+441,170,15,Device instalment,2,78.0
+442,170,13,International calls,2,49.5
+443,171,57,Monthly plan fee,1,65.0
+444,171,57,Data add-on 10 GB,3,58.5
+445,171,57,International calls,2,32.5
+446,171,57,Device instalment,1,39.0
+447,172,143,Monthly plan fee,1,100.0
+448,173,100,Monthly plan fee,1,35.0
+449,174,20,Monthly plan fee,1,550.0
+450,174,20,Device instalment,3,990.0
+451,174,20,Roaming package,1,220.0
+452,175,28,Monthly plan fee,1,550.0
+453,175,28,Roaming package,2,440.0
+454,175,28,Device instalment,1,330.0
+455,175,28,Data add-on 10 GB,3,495.0
+456,176,118,Monthly plan fee,1,250.0
+457,176,118,Roaming package,2,200.0
+458,176,118,International calls,3,187.5
+459,176,118,Data add-on 10 GB,2,150.0
+460,177,21,Monthly plan fee,1,320.0
+461,177,21,Device instalment,3,576.0
+462,177,21,Data add-on 10 GB,1,96.0
+463,178,89,Monthly plan fee,1,99.0
+464,179,111,Monthly plan fee,1,250.0
+465,179,111,Data add-on 10 GB,3,225.0
+466,179,111,Device instalment,3,450.0
+467,180,24,Monthly plan fee,1,35.0
+468,180,87,International calls,2,49.5
+469,181,95,Monthly plan fee,1,35.0
+470,181,95,Device instalment,2,42.0
+471,182,102,Monthly plan fee,1,99.0
+472,182,,Late payment fee,1,10.0
+473,183,128,Monthly plan fee,1,320.0
+474,183,148,Data add-on 10 GB,3,288.0
+475,184,96,Monthly plan fee,1,550.0
+476,185,25,Monthly plan fee,1,100.0
+477,185,25,International calls,3,75.0
+478,186,38,Monthly plan fee,1,550.0
+479,186,38,Roaming package,3,660.0
+480,186,38,International calls,1,137.5
+481,187,141,Monthly plan fee,1,250.0
+482,187,,Late payment fee,3,30.0
+483,188,106,Monthly plan fee,1,150.0
+484,188,14,Data add-on 10 GB,2,150.0
+485,188,106,Roaming package,1,60.0
+486,188,106,Device instalment,3,270.0
+487,189,36,Monthly plan fee,1,250.0
+488,189,36,Roaming package,3,300.0
+489,190,135,Monthly plan fee,1,200.0
+490,190,,Late payment fee,3,30.0
+491,191,109,Monthly plan fee,1,99.0
+492,191,109,International calls,2,49.5
+493,192,111,Monthly plan fee,1,250.0
+494,193,109,Monthly plan fee,1,99.0
+495,194,105,Monthly plan fee,1,99.0
+496,195,140,Monthly plan fee,1,150.0
+497,195,58,Data add-on 10 GB,3,225.0
+498,195,114,International calls,2,75.0
+499,195,114,Roaming package,2,120.0
+500,196,150,Monthly plan fee,1,100.0
+501,196,22,Data add-on 10 GB,1,75.0
+502,197,30,Monthly plan fee,1,250.0
+503,197,30,International calls,3,187.5
+504,197,,Late payment fee,3,30.0
+505,197,30,Device instalment,2,300.0
+506,198,2,Monthly plan fee,1,150.0
+507,198,2,Roaming package,3,180.0
+508,198,2,Device instalment,1,90.0
+509,198,,Late payment fee,2,20.0
+510,199,111,Monthly plan fee,1,250.0
+511,199,111,Device instalment,1,150.0
+512,199,111,Data add-on 10 GB,3,225.0
+513,200,8,Monthly plan fee,1,35.0

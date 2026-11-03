@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Explorer</title>
+  <script src="/static/theme.js"></script>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Data Explorer</div>
+    <div class="ws-picker">
+      <label for="ws-select">Workspace</label>
+      <select id="ws-select" title="Switch workspace"></select>
+      <button id="ws-new" class="btn" type="button">New</button>
+      <button id="ws-rename" class="btn" type="button">Rename</button>
+      <button id="ws-delete" class="btn danger" type="button">Delete</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="theme-switch" id="theme-switch" role="radiogroup" aria-label="Colour theme"
+         title="Colour theme. System follows the setting of Windows. Exported diagrams and reports are always light.">
+      <label><input type="radio" name="theme" value="system" checked><span>System</span></label>
+      <label><input type="radio" name="theme" value="light"><span>Light</span></label>
+      <label><input type="radio" name="theme" value="dark"><span>Dark</span></label>
+    </div>
+    <div class="local-badge" title="The app listens on 127.0.0.1 only. It makes no outside calls and reads databases read-only.">
+      <span class="dot" aria-hidden="true"></span><span>Local only<span class="more"> · read-only</span></span>
+    </div>
+  </header>
+
+  <main class="layout" id="layout">
+    <aside class="panel left" id="left-panel" aria-label="Sources and tables">
+      <section class="block">
+        <div class="block-head">
+          <h2>Sources</h2>
+          <button id="add-source" class="btn primary small" type="button">+ Add source</button>
+        </div>
+        <ul id="source-list" class="source-list"></ul>
+      </section>
+      <section class="block grow">
+        <div class="block-head">
+          <h2>Tables <span id="table-count" class="count"></span></h2>
+        </div>
+        <div class="filters">
+          <input id="table-search" type="search" placeholder="Search tables and columns" autocomplete="off" aria-label="Search tables and columns">
+          <select id="schema-filter" aria-label="Schema filter"></select>
+        </div>
+        <ul id="table-list" class="table-list"></ul>
+      </section>
+    </aside>
+
+    <section class="center">
+      <div class="tabbar">
+        <button id="toggle-left" class="icon-btn" type="button" title="Show or hide the left panel" aria-label="Toggle left panel">&#9776;</button>
+        <nav class="tabs" id="tabs" aria-label="Features"></nav>
+        <button id="toggle-right" class="icon-btn" type="button" title="Show or hide the details panel" aria-label="Toggle details panel">&#9776;</button>
+      </div>
+
+      <div class="view" id="view-er_graph">
+      <div class="toolbar" id="toolbar">
+        <div class="group">
+          <button id="focus-toggle" class="btn toggle" type="button" aria-pressed="false"
+                  title="Show only the tables within N hops of the selected table. Double-click a table to focus on it.">Focus</button>
+          <div class="stepper" title="How many hops around the focused table">
+            <button id="hops-minus" type="button" aria-label="Fewer hops">&minus;</button>
+            <span id="hops-value">1 hop</span>
+            <button id="hops-plus" type="button" aria-label="More hops">+</button>
+          </div>
+        </div>
+        <div class="group" role="group" aria-label="Relationships to show">
+          <span id="kind-toggles" class="kind-toggles"></span>
+          <select id="min-conf" title="Hide inferred relationships below this confidence" aria-label="Minimum confidence">
+            <option value="0">Any confidence</option>
+            <option value="0.6">60% and up</option>
+            <option value="0.8">80% and up</option>
+          </select>
+        </div>
+        <div class="group">
+          <select id="layout-select" title="How tables are arranged" aria-label="Layout">
+            <option value="auto">Layout: auto</option>
+            <option value="dagre">Layout: hierarchy</option>
+            <option value="fcose">Layout: force</option>
+            <option value="grid">Layout: grid</option>
+          </select>
+          <button id="relayout" class="btn" type="button" title="Arrange the tables again">Relayout</button>
+        </div>
+        <div class="group">
+          <button id="zoom-out" class="btn square" type="button" title="Zoom out" aria-label="Zoom out">&minus;</button>
+          <button id="zoom-in" class="btn square" type="button" title="Zoom in" aria-label="Zoom in">+</button>
+          <button id="zoom-fit" class="btn" type="button" title="Fit everything in view">Fit</button>
+        </div>
+        <div class="group menu-anchor">
+          <button id="export-btn" class="btn" type="button" aria-haspopup="true" aria-expanded="false">Export &#9662;</button>
+          <div id="export-menu" class="menu" hidden>
+            <div class="menu-title">Whole diagram</div>
+            <button type="button" data-scope="whole" data-format="drawio">draw.io file (.drawio)</button>
+            <button type="button" data-scope="whole" data-format="png">Image (.png)</button>
+            <div class="menu-title">Current view <span id="export-view-note"></span></div>
+            <button type="button" data-scope="view" data-format="drawio">draw.io file (.drawio)</button>
+            <button type="button" data-scope="view" data-format="png">Image (.png)</button>
+            <label class="menu-check"><input type="checkbox" id="export-all-columns"> PNG: show every column</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="graph-wrap">
+        <div id="graph" aria-label="Entity relationship graph"></div>
+        <div id="graph-empty" class="empty" hidden>
+          <h3>No tables yet</h3>
+          <p>Add a source to see its tables and how they relate: SQL files, a live database, or CSV / Excel exports.</p>
+          <button id="empty-add" class="btn primary" type="button">+ Add source</button>
+        </div>
+      </div>
+      <div class="graph-foot">
+        <div class="legend" aria-hidden="true">
+          <span><i class="line solid"></i>declared key</span>
+          <span><i class="line dashed"></i>inferred</span>
+          <span><i class="line dotted"></i>accepted from values</span>
+          <span><b>1</b> &ndash; <b>N</b> one-to-many</span>
+        </div>
+        <div class="status" id="graph-status"></div>
+      </div>
+      </div>
+
+      <div class="view" id="view-profile" hidden>
+        <div class="toolbar">
+          <div class="group">
+            <button id="profile-all" class="btn primary" type="button"
+                    title="Row counts for every table, then statistics for each one. Runs in the background; tables over the sampling threshold are profiled on a sample.">Profile all</button>
+            <button id="profile-selected" class="btn" type="button"
+                    title="Profile the open table, or the tables ticked in the list below">Profile selected</button>
+            <button id="profile-counts" class="btn" type="button"
+                    title="Only count the rows of every table: estimates from the database's own statistics where it has them">Row counts only</button>
+          </div>
+          <div class="group job" id="job-box" hidden>
+            <progress id="job-progress" max="100" value="0" aria-label="Profiling progress"></progress>
+            <span id="job-text" class="job-text"></span>
+            <button id="job-cancel" class="btn small danger" type="button" title="Stop before the next query">Cancel</button>
+          </div>
+          <div class="spacer"></div>
+          <div class="group">
+            <label class="chip-toggle" title="Read the real values of personal columns again and show them unmasked. Kept in memory only: off again when the app restarts.">
+              <input type="checkbox" id="show-personal">Show personal values</label>
+            <button id="profile-clear" class="btn danger" type="button"
+                    title="Delete the row counts and statistics saved for this workspace">Clear saved statistics</button>
+          </div>
+        </div>
+        <div id="personal-banner" class="banner" role="status" hidden>
+          <span><strong>Personal values are visible.</strong>
+          Names, phone numbers, IDs, e-mail addresses and pay are read live and shown unmasked on this screen. They are still not saved.</span>
+          <button id="personal-off" class="btn small" type="button">Mask again</button>
+        </div>
+        <div id="profile-body" class="view-body"></div>
+      </div>
+
+      <div class="view" id="view-quality" hidden>
+        <div class="toolbar">
+          <div class="group" id="quality-severities" role="group" aria-label="Severity"></div>
+          <div class="group">
+            <select id="quality-table" aria-label="Filter by table"></select>
+            <select id="quality-rule" aria-label="Filter by rule"></select>
+          </div>
+          <div class="spacer"></div>
+          <span id="quality-note" class="note"></span>
+        </div>
+        <div id="quality-body" class="view-body"></div>
+      </div>
+
+      <div class="view" id="view-relations" hidden>
+        <div class="toolbar">
+          <div class="group">
+            <button id="rel-check-all" class="btn primary" type="button"
+                    title="Measure every relationship on the data: coverage, orphan rows, empty keys and the real cardinality. Runs in the background; each child table is read once, with the same sampling as profiling.">Check all</button>
+            <button id="rel-check-selected" class="btn" type="button"
+                    title="Check only the relationships ticked in the list">Check selected</button>
+            <button id="rel-suggest" class="btn" type="button"
+                    title="Look for columns whose values are found in a key of another table. Nothing is added until you accept a suggestion.">Find links by values</button>
+          </div>
+          <div class="group job" id="rel-job-box" hidden>
+            <progress id="rel-job-progress" max="100" value="0" aria-label="Job progress"></progress>
+            <span id="rel-job-text" class="job-text"></span>
+            <button id="rel-job-cancel" class="btn small danger" type="button" title="Stop before the next step">Cancel</button>
+          </div>
+          <div class="spacer"></div>
+          <div class="group">
+            <input id="rel-search" type="search" placeholder="Filter by table or column" autocomplete="off"
+                   aria-label="Filter relationships by table or column">
+            <select id="rel-kind" aria-label="Filter by kind of relationship"></select>
+            <select id="rel-status" aria-label="Filter by result"></select>
+          </div>
+        </div>
+        <div id="relations-body" class="view-body"></div>
+      </div>
+
+      <div class="view" id="view-sql" hidden>
+        <div class="toolbar">
+          <div class="group">
+            <label class="tb-label" for="sql-source">Run against</label>
+            <select id="sql-source" class="wide" title="The source the query is sent to"></select>
+            <button id="sql-run" class="btn primary" type="button" title="Run the query (Ctrl+Enter)">Run</button>
+            <button id="sql-csv" class="btn" type="button" disabled
+                    title="Save the result as CSV, exactly as shown: masked values stay masked">Export CSV</button>
+          </div>
+          <div class="spacer"></div>
+          <span id="sql-note" class="note"></span>
+        </div>
+        <div id="sql-banner" class="banner" role="status" hidden>
+          <span><strong>Personal values are visible.</strong>
+          "Show personal values" is switched on, so results are shown unmasked. They are not saved.</span>
+          <button id="sql-mask" class="btn small" type="button">Mask again</button>
+        </div>
+        <div class="sql-top">
+          <textarea id="sql-editor" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="SQL query"
+                    placeholder="SELECT ... FROM ...   (one SELECT or WITH statement; Ctrl+Enter runs it)"></textarea>
+          <aside class="sql-history" aria-label="Query history">
+            <div class="block-head">
+              <h2>Last queries <span id="sql-history-count" class="count"></span></h2>
+              <button id="sql-history-clear" class="link" type="button" title="Forget the saved query texts of this workspace">Clear</button>
+            </div>
+            <ul id="sql-history"></ul>
+          </aside>
+        </div>
+        <div id="sql-result" class="sql-result"></div>
+      </div>
+
+      <div class="view" id="view-report" hidden>
+        <div class="view-body">
+          <div class="report-card">
+            <div class="view-title">Report</div>
+            <div class="d-sub">One file to pass on: summary, ER diagram, tables with row counts, column profiles, quality
+              findings, relationship checks and notes on sampling.</div>
+            <fieldset class="report-scope">
+              <legend>What it covers</legend>
+              <label class="radio"><input type="radio" name="report-scope" id="report-scope-all" value="all" checked>
+                <span><strong>Whole workspace</strong><span id="report-all-note" class="note"></span></span></label>
+              <label class="radio"><input type="radio" name="report-scope" id="report-scope-view" value="view">
+                <span><strong>Current view</strong> of the ER graph<span id="report-view-note" class="note"></span></span></label>
+            </fieldset>
+            <div class="report-actions">
+              <button id="report-html" class="btn primary" type="button"
+                      title="One self-contained HTML file: opens in any browser, prints cleanly">Download HTML</button>
+              <button id="report-xlsx" class="btn" type="button"
+                      title="The same content as an Excel workbook, one sheet per section">Download Excel</button>
+            </div>
+            <div class="callout" id="report-masked">
+              <strong>A report is always masked.</strong> Values of personal columns are masked in it whatever the
+              "Show personal values" switch says. It is built from the saved statistics only - nothing is read from your
+              sources - and it is handed to the browser as a download: the app writes it nowhere.
+            </div>
+            <div class="section">
+              <div class="section-title">What is saved to go into it</div>
+              <ul id="report-ready" class="ready"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="view" id="view-scripts" hidden>
+        <div class="toolbar">
+          <div class="group scr-pick">
+            <label class="tb-label" for="scripts-folder">Folder</label>
+            <input id="scripts-folder" class="path" type="text" autocomplete="off" spellcheck="false"
+                   placeholder="C:\work\scripts  (every .sql and .py file under it is read, never run)"
+                   title="The folder of the scripts on this PC. They are only read: nothing is run and nothing is written into the folder.">
+            <select id="scripts-dialect" aria-label="Dialect of the scripts" title="The SQL dialect the scripts are written in"></select>
+            <button id="scripts-scan" class="btn primary" type="button"
+                    title="Read every script of the folder and find the tables, columns and joins they use. Runs in the background.">Scan</button>
+          </div>
+          <div class="group job" id="scripts-job-box" hidden>
+            <progress id="scripts-job-progress" max="100" value="0" aria-label="Scan progress"></progress>
+            <span id="scripts-job-text" class="job-text"></span>
+            <button id="scripts-job-cancel" class="btn small danger" type="button" title="Stop before the next file">Cancel</button>
+          </div>
+        </div>
+        <div id="scripts-body" class="view-body"></div>
+      </div>
+    </section>
+
+    <aside class="panel right" id="right-panel" aria-label="Table details">
+      <div id="details"></div>
+    </aside>
+  </main>
+
+  <dialog id="source-dialog" class="dialog wide">
+    <form method="dialog" class="dialog-head">
+      <h2>Add a source</h2>
+      <button class="icon-btn" value="cancel" aria-label="Close">&times;</button>
+    </form>
+    <div class="seg" role="tablist">
+      <button type="button" role="tab" data-pane="sql" class="active">SQL files</button>
+      <button type="button" role="tab" data-pane="db">Live database</button>
+      <button type="button" role="tab" data-pane="files">CSV / Excel files</button>
+    </div>
+
+    <form id="pane-sql" class="pane" autocomplete="off">
+      <p class="hint">DDL (CREATE TABLE, ALTER TABLE) gives tables, columns and declared keys. Queries add the relationships implied by their JOINs.</p>
+      <label>Upload .sql files
+        <input type="file" name="files" accept=".sql" multiple></label>
+      <div class="or">or</div>
+      <label>File or folder path on this PC
+        <input type="text" name="path" placeholder="C:\work\sql  (every .sql file in the folder is read)"></label>
+      <label>Label <span class="opt">optional</span>
+        <input type="text" name="label" maxlength="120"></label>
+      <div class="dialog-foot"><button class="btn primary" type="submit">Add SQL files</button></div>
+    </form>
+
+    <form id="pane-db" class="pane" hidden autocomplete="off">
+      <p class="hint">Read-only: the app only reads the catalog, never commits, rolls back after every use and applies a statement timeout. Use a read-only database account.</p>
+      <div class="grid2">
+        <label>Saved connection
+          <select name="profile"><option value="">(none)</option></select></label>
+        <label>Engine
+          <select name="engine"></select></label>
+        <label class="db-net">Host
+          <input type="text" name="host" placeholder="db.example.local"></label>
+        <label class="db-net">Port
+          <input type="number" name="port" min="1" max="65535"></label>
+        <label class="span2"><span id="db-database-label">Database</span>
+          <input type="text" name="database"></label>
+        <label class="db-net">User
+          <input type="text" name="username" autocomplete="off"></label>
+        <label class="db-net">Password <span class="opt">kept in memory only, never saved</span>
+          <input type="password" name="password" autocomplete="new-password"></label>
+        <label class="span2 db-net">Schema filter <span class="opt">optional, comma separated; empty = the account's default schema</span>
+          <input type="text" name="schema_filter" list="schema-options" placeholder="e.g. SALES, BILLING"></label>
+        <datalist id="schema-options"></datalist>
+      </div>
+      <p class="hint" id="db-hint"></p>
+      <label class="check"><input type="checkbox" name="include_views"> Include views</label>
+      <label class="check"><input type="checkbox" name="save_profile"> Save this connection for next time (without the password)</label>
+      <div id="db-test-result" class="test-result" hidden></div>
+      <div class="dialog-foot">
+        <button class="btn" type="button" id="db-test">Test connection</button>
+        <button class="btn primary" type="submit">Add database</button>
+      </div>
+    </form>
+
+    <form id="pane-files" class="pane" hidden autocomplete="off">
+      <p class="hint">Each CSV file, and each sheet of an Excel workbook, becomes a table. Column types are detected from the data; relationships are inferred from column names.</p>
+      <label>Upload .csv / .xlsx files
+        <input type="file" name="files" accept=".csv,.tsv,.txt,.xlsx,.xlsm" multiple></label>
+      <div class="or">or</div>
+      <label>File or folder path on this PC
+        <input type="text" name="path" placeholder="C:\work\exports  (files are read in place, not copied)"></label>
+      <label>Label <span class="opt">optional</span>
+        <input type="text" name="label" maxlength="120"></label>
+      <div class="dialog-foot"><button class="btn primary" type="submit">Add files</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="ask-dialog" class="dialog">
+    <form method="dialog">
+      <h2 id="ask-title"></h2>
+      <p id="ask-text" class="hint"></p>
+      <input id="ask-input" type="text">
+      <div class="dialog-foot">
+        <button class="btn" id="ask-cancel" type="button">Cancel</button>
+        <button class="btn primary" id="ask-ok" value="ok" type="submit">OK</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <script src="/static/vendor/cytoscape.min.js"></script>
+  <script src="/static/vendor/layout-base.js"></script>
+  <script src="/static/vendor/cose-base.js"></script>
+  <script src="/static/vendor/cytoscape-fcose.js"></script>
+  <script src="/static/vendor/cytoscape-dagre.min.js"></script>
+  <script src="/static/vendor/chart.umd.min.js"></script>
+  <script src="/static/app.js"></script>
+  <script src="/static/profile.js"></script>
+  <script src="/static/analysis.js"></script>
+  <script src="/static/scripts.js"></script>
+</body>
+</html>

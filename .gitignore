@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# The app's own data: saved workspaces, connection profiles, uploaded files.
+# These can hold the structure of company databases and copies of company files - never commit them.
+data/explorer.db
+data/explorer.db-*
+data/uploads/
+# The Scripts tab's saved scans (the graph of a scripts folder: names and SQL text of the team's scripts)
+data/lineage/
+# Reports saved to look at by hand (scripts/demo_report.py)
+data/checks/
+
+# Diagrams exported into the project folder by hand
+/*.drawio
+/*.png

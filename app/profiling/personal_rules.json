@@ -1,0 +1,213 @@
+{
+  "about": [
+    "Which columns Data Explorer treats as personal data, and how their values are recognised.",
+    "Edit this file to add your own terms: no code change is needed. Restart the app afterwards.",
+    "A wrong edit stops the app at start with a message that names the problem.",
+    "README.md, section 'Personal data', explains every key of this file.",
+    "DATA_EXPLORER_PERSONAL_RULES=<path> makes the app read another copy of this file."
+  ],
+
+  "categories": {
+    "name": "name",
+    "phone": "phone number",
+    "email": "e-mail",
+    "national_id": "national ID / Iqama",
+    "passport": "passport",
+    "address": "address",
+    "birth_date": "birth date",
+    "iban": "IBAN",
+    "card": "card number",
+    "subscriber_id": "subscriber / SIM / device identifier",
+    "sa_mobile": "Saudi mobile numbers",
+    "salary": "salary / pay",
+    "user": "marked by you"
+  },
+
+  "names": {
+    "about": [
+      "A column name is split into lower-case words first: FullName, full_name and FULL-NAME all give [full, name].",
+      "words: a column is in the category when one of its words, or all its words joined, is in the list.",
+      "word_groups: a column is in the category when it holds one word from EVERY group, e.g. calling + number.",
+      "  unless_table_has: the rule is skipped when the table's own name holds one of these words.",
+      "  only_in_tables: the rule counts only in a table of one of these kinds (see table_kinds): gross_pay in",
+      "    hr_payroll_run, postal_code and latitude in crm_address. Without a table to go by, such a rule says",
+      "    nothing. (A postal code in a table of customers or shops is shown, like its city and district.)",
+      "  not_in_tables: the rule is skipped in a table of one of these kinds.",
+      "  unless_column_has: the rule is skipped when the column also holds one of these words: allowance_gb.",
+      "  unless_followed_by: the rule is skipped when nothing but these words follows its word: pay_month and",
+      "    pay_date are a period and a date, not pay. net_pay, monthly_pay and pay_per_month are pay.",
+      "table_kinds: what a table holds, read from the words of its own name (singular or plural): hr_employee is",
+      "  a table of people and of staff, crm_address a table of addresses. The rules above and below refer to them.",
+      "word_exceptions: a word of 'words' that does not count for its category in tables of some kinds:",
+      "  compensation in sup_complaint is money paid to a customer, not pay. not_in_tables: where it counts anyway.",
+      "about_words: a last word that makes the column a fact about the thing: email_verified, phone_type.",
+      "key_words: a last word that makes it a key into another table: address_id, card_key.",
+      "  kept_with_key_word: categories that stay personal even then (national_id is a personal value).",
+      "thing_words: '<thing>_name' is the name of a thing, not of a person: plan_name, branch_name.",
+      "own_name: '<x>_name' in a table whose own name holds x names that thing, whatever x is: dealer_name in",
+      "  sal_dealer, family_name in prd_product_family, grade_name in hr_pay_grade.",
+      "  not_in_tables: never in a table of these kinds - customer_name in crm_customer is a person's name.",
+      "    A table of people that 'people' does not list shows its <x>_name: add the word there.",
+      "  not_for_words: words that go with a person's name and never stand for a thing: first, last, full ...",
+      "salary: what a person is paid. pay, allowance and deduction count only in a table of staff or pay",
+      "  (word_groups); payment and commission never - in telecom an allowance is a data allowance and payment",
+      "  is a business table."
+    ],
+    "words": {
+      "email": ["email", "mail", "emailaddress", "emailaddr"],
+      "phone": ["msisdn", "mobile", "phone", "telephone", "tel", "fax", "gsm", "whatsapp", "cellphone",
+                "mobileno", "phoneno", "mobilenumber", "phonenumber", "mob", "mobno",
+                "anumber", "bnumber", "aparty", "bparty",
+                "callingnumber", "callednumber", "callernumber", "calleenumber", "othernumber", "otherparty",
+                "diallednumber", "dialednumber", "originatingnumber", "terminatingnumber",
+                "servicenumber", "subscriberno", "subscribernumber", "contactno", "contactnumber"],
+      "subscriber_id": ["imsi", "imei", "imeisv", "iccid", "simserial", "puk", "puk1", "puk2", "mac", "macaddress",
+                        "macaddr"],
+      "national_id": ["nid", "iqama", "ssn", "nin", "nationalid", "civilid", "idnumber", "idno", "identity"],
+      "passport": ["passport", "passportno", "passportnumber"],
+      "address": ["address", "addr", "street", "address1", "address2"],
+      "birth_date": ["dob", "birth", "birthdate", "birthday", "dateofbirth"],
+      "iban": ["iban"],
+      "card": ["card", "pan", "creditcard", "cardnumber", "cardno"],
+      "salary": ["salary", "salaries", "wage", "wages", "bonus", "bonuses", "compensation", "remuneration"],
+      "name": ["name", "firstname", "lastname", "fullname", "surname", "forename", "middlename", "familyname",
+               "nickname", "username", "nm", "fname", "lname", "mname"]
+    },
+    "word_groups": [
+      {"category": "national_id", "groups": [["national", "civil"], ["id"]]},
+      {"category": "national_id", "groups": [["id", "identity"], ["number", "no"]]},
+      {"category": "birth_date", "groups": [["date"], ["birth"]]},
+      {"category": "card", "groups": [["credit"], ["card"]]},
+      {"category": "phone", "groups": [["a", "b"], ["number", "no", "num", "nbr", "party"]]},
+      {"category": "phone", "groups": [["calling", "called", "caller", "callee", "dialled", "dialed", "originating",
+                                        "terminating"],
+                                       ["number", "no", "num", "nbr", "party"]]},
+      {"category": "phone", "groups": [["other"], ["number", "party"]]},
+      {"category": "phone", "groups": [["service", "subscriber", "contact"], ["number", "no"]]},
+      {"category": "phone", "groups": [["mob"], ["no", "num", "number"]]},
+      {"category": "phone", "groups": [["line"], ["number"]],
+       "unless_table_has": ["line", "lines", "item", "items", "detail", "details", "row", "rows", "file", "files",
+                            "log", "logs", "script", "scripts", "code", "source"]},
+      {"category": "subscriber_id", "groups": [["sim"], ["serial"]]},
+      {"category": "name", "groups": [["account", "acct", "card"], ["holder"]]},
+      {"category": "name", "groups": [["accountholder", "cardholder"]]},
+      {"category": "address", "groups": [["postal", "post", "zip"], ["code"]], "only_in_tables": ["address"]},
+      {"category": "address", "groups": [["postcode", "postalcode", "zipcode"]], "only_in_tables": ["address"]},
+      {"category": "address", "groups": [["building", "bldg", "unit", "additional", "secondary", "apartment", "apt", "flat",
+                                          "floor", "house", "villa"],
+                                         ["no", "number", "num", "nbr"]],
+       "only_in_tables": ["address"]},
+      {"category": "address", "groups": [["latitude", "longitude", "lat", "lng", "lon"]],
+       "only_in_tables": ["address", "people"]},
+      {"category": "salary", "groups": [["pay", "allowance", "allowances", "deduction", "deductions"]],
+       "only_in_tables": ["staff"],
+       "unless_column_has": ["data", "gb", "mb", "kb", "minutes", "mins", "sms", "voice"],
+       "unless_followed_by": ["month", "year", "date", "day", "period", "week", "quarter", "dt", "time", "ts", "cycle",
+                              "frequency", "freq", "calendar", "run", "start", "end", "from", "to"]}
+    ],
+    "table_kinds": {
+      "people": ["person", "people", "individual", "customer", "cust", "client", "consumer", "subscriber", "member", "user",
+                 "login", "account", "accountholder", "cardholder", "holder", "owner", "contact", "lead", "prospect",
+                 "employee", "emp", "staff", "personnel", "worker", "workforce", "manager", "supervisor", "director",
+                 "officer", "agent", "rep", "representative", "salesman", "salesperson", "cashier", "technician", "engineer",
+                 "driver", "pilot", "crew", "contractor", "freelancer", "trainee", "intern", "candidate", "applicant",
+                 "recruit", "volunteer", "patient", "doctor", "physician", "nurse", "student", "pupil", "teacher", "tutor",
+                 "instructor", "lecturer", "author", "guest", "visitor", "passenger", "traveller", "traveler", "pilgrim",
+                 "resident", "tenant", "citizen", "voter", "taxpayer", "pensioner", "retiree", "beneficiary", "dependent",
+                 "dependant", "guardian", "parent", "child", "children", "spouse", "relative", "kin", "heir", "donor",
+                 "borrower", "debtor", "payer", "payee", "insured", "claimant", "complainant", "caller", "sender",
+                 "recipient", "receiver", "signatory", "shareholder", "stockholder", "investor", "sponsor", "guarantor",
+                 "referee", "witness", "player", "athlete", "coach", "vip", "household", "occupant", "landlord", "buyer",
+                 "seller", "bidder", "policyholder", "assignee", "approver", "reviewer", "requester", "requestor",
+                 "reporter", "creator", "editor", "admin", "administrator", "analyst", "consultant", "advisor", "adviser",
+                 "specialist", "inspector", "auditor", "accountant", "clerk", "secretary", "lawyer", "attorney", "founder",
+                 "respondent", "participant", "attendee", "speaker", "nominee", "delegate", "pharmacist", "dentist",
+                 "surgeon", "therapist"],
+      "address": ["address", "addresses", "addr", "residence", "home", "household", "premise", "premises", "dwelling"],
+      "staff": ["hr", "hrms", "payroll", "payslip", "salary", "wage", "employee", "emp", "staff", "personnel", "worker",
+                "workforce"],
+      "customer_case": ["complaint", "dispute", "claim", "ticket", "case", "incident", "grievance", "refund"]
+    },
+    "word_exceptions": [
+      {"category": "salary", "words": ["compensation"], "only_in_tables": ["customer_case"], "not_in_tables": ["staff"]}
+    ],
+    "own_name": {
+      "not_in_tables": ["people"],
+      "not_for_words": ["first", "last", "middle", "full", "given", "second", "third", "fourth", "father", "mother",
+                        "grandfather", "maiden", "birth", "sur", "fore", "nick", "pen", "legal", "preferred", "display",
+                        "english", "arabic", "ar", "en"]
+    },
+    "about_words": ["type", "status", "count", "flag", "verified", "valid", "length", "len", "format", "optin",
+                    "consent", "template", "enabled", "required", "changed", "updated", "confirmed"],
+    "key_words": ["id", "key", "pk", "fk", "seq"],
+    "kept_with_key_word": ["national_id", "passport"],
+    "thing_words": [
+      "plan", "branch", "product", "item", "file", "table", "column", "schema", "database", "db", "city", "country",
+      "region", "state", "province", "district", "area", "zone", "brand", "model", "device", "bank", "store", "shop",
+      "department", "dept", "team", "group", "role", "status", "category", "type", "package", "service", "server",
+      "host", "event", "campaign", "project", "company", "org", "organization", "organisation", "currency", "language",
+      "tariff", "offer", "bundle", "channel", "site", "location", "building", "course", "class", "subject", "field",
+      "index", "view", "report", "template", "job", "task", "queue", "topic", "app", "application", "module",
+      "feature", "tag", "label", "domain", "network", "cell", "tower", "node", "cluster", "sheet", "document", "doc",
+      "image", "font", "color", "colour", "unit", "metric", "kpi", "rule", "policy", "segment", "tier", "level",
+      "stage", "step", "phase", "menu", "page", "screen", "dataset", "source", "system", "env", "environment",
+      "promo", "promotion", "process", "object", "attribute", "parameter", "param", "setting", "config", "method",
+      "function", "procedure", "trigger", "constraint", "partition", "tablespace", "instance", "vendor", "operator",
+      "carrier", "provider", "plant", "warehouse", "route", "line", "station", "airport", "port", "market", "sector",
+      "industry", "program", "programme", "scheme", "fund", "portfolio", "asset", "instrument", "game", "skill",
+      "prod", "prd", "pkg", "grp", "cat", "svc", "tbl", "col", "cfg", "tmpl"
+    ]
+  },
+
+  "values": {
+    "about": [
+      "A sample of a column's values is checked rule by rule, in this order; the first rule that fits names it.",
+      "share: the rule fits when at least this share of the non-empty values matches one of its patterns.",
+      "normalise: what is done to a value before matching (see 'normalisers').",
+      "not_for_families / not_for_name_endings: column types and names the rule is never applied to.",
+      "Patterns are Python regular expressions and must match the whole normalised value."
+    ],
+    "min_values": 3,
+    "normalisers": {
+      "trim": {"remove": "", "replace": []},
+      "compact": {"remove": "[\\s\\-]", "replace": []},
+      "phone": {"remove": "[\\s\\-.()\\[\\]/]", "replace": [["^00966", "+966"], ["^\\+9660", "+966"]]}
+    },
+    "rules": [
+      {"category": "email", "share": 0.8, "normalise": "trim",
+       "patterns": {"e-mail address": "^[^@\\s]+@[^@\\s]+\\.[A-Za-z]{2,}$"}},
+      {"category": "iban", "share": 0.8, "normalise": "compact",
+       "patterns": {"Saudi IBAN": "(?i)^SA\\d{22}$"}},
+      {"category": "phone", "share": 0.5, "normalise": "phone",
+       "patterns": {
+         "Saudi mobile": "^(?:\\+?966|0)?5\\d{8}$",
+         "Saudi landline": "^(?:\\+?966|0)[1-7]\\d{8}$",
+         "international number": "^(?:\\+|00)[1-9]\\d{7,14}$"}},
+      {"category": "national_id", "share": 0.8, "normalise": "compact",
+       "patterns": {"Saudi national ID / Iqama": "^[12]\\d{9}$"},
+       "not_for_families": ["date"],
+       "not_for_name_endings": ["_ts", "_time", "epoch"]}
+    ]
+  },
+
+  "masking": {
+    "about": [
+      "A masked value keeps its first and last characters: 05******67, a***@d***.com.",
+      "Values of fully_masked_up_to characters or fewer, birth dates and text that looks like a date keep nothing.",
+      "fully_masked_categories: every letter and digit of a value is hidden; its length and punctuation stay.",
+      "length_hidden_categories: nothing of a value stays, not even its length: every value is *****. The",
+      "  column's statistics keep no top values and no text lengths either, only counts and null %.",
+      "date_like: Python regular expressions; text that matches one of them whole is masked completely."
+    ],
+    "fully_masked_up_to": 4,
+    "fully_masked_categories": ["birth_date", "salary"],
+    "length_hidden_categories": ["salary"],
+    "date_like": [
+      "\\d{4}[-/.]\\d{1,2}[-/.]\\d{1,2}(?:[ T]\\d{1,2}:\\d{2}(?::\\d{2}(?:[.,]\\d+)?)?\\s*(?:[AaPp][Mm])?\\s*(?:Z|[+-]\\d{2}:?\\d{2})?)?",
+      "\\d{1,2}[-/.]\\d{1,2}[-/.]\\d{2,4}(?:[ T]\\d{1,2}:\\d{2}(?::\\d{2}(?:[.,]\\d+)?)?\\s*(?:[AaPp][Mm])?)?",
+      "\\d{1,2}[-/. ]?[A-Za-z]{3,9}[-/., ]{0,2}\\d{2,4}(?:[ T]\\d{1,2}[:.]\\d{2}(?:[:.]\\d{2}(?:[.,]\\d+)?)?\\s*(?:[AaPp][Mm])?)?",
+      "[A-Za-z]{3,9}[-/. ]\\d{1,2}(?:st|nd|rd|th)?,?[-/ ]\\d{2,4}",
+      "(?:19|20)\\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\\d|3[01])(?:[ T]?\\d{4}(?:\\d{2})?)?"
+    ]
+  }
+}

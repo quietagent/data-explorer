@@ -1,0 +1,7 @@
+# Data Explorer - database drivers (pure wheels, no client software needed).
+# run.bat installs these one by one: if one fails, the app still starts and that
+# engine is shown as "driver not installed". One driver per line.
+oracledb>=2.2          # Oracle, thin mode
+pymssql>=2.3           # SQL Server
+psycopg[binary]>=3.2   # PostgreSQL
+PyMySQL>=1.1           # MySQL / MariaDB

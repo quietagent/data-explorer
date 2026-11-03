@@ -1,0 +1,132 @@
+{
+  "about": [
+    "The functions a statement typed in the SQL tab may call, per engine. Everything else is refused.",
+    "A function is refused unless it is listed here: under 'all' (every engine) or under its engine.",
+    "Why a list of what is allowed: a function can do anything - sleep, take a lock, read a file, call",
+    "another server, or write through an autonomous transaction (a user-defined function in Oracle).",
+    "A list of known-bad names would always be one name short.",
+    "Only add built-in functions that read their arguments and return a value. Never add a function",
+    "your own database defines unless you have read its code.",
+    "Edit this file and restart the app. For one PC only, the environment variable",
+    "DATA_EXPLORER_SQL_FUNCTIONS=my_func,oracle:other_func adds names without touching the file.",
+    "'types' are type names that may be followed by a bracket: VARCHAR(10), NUMBER(10, 2)."
+  ],
+
+  "all": [
+    "count", "sum", "avg", "min", "max", "abs", "round", "ceil", "ceiling", "floor", "power", "sqrt", "exp", "ln",
+    "log", "log10", "mod", "sign", "sin", "cos", "tan", "asin", "acos", "atan", "atan2",
+    "upper", "lower", "trim", "ltrim", "rtrim", "length", "substr", "substring", "replace", "concat", "coalesce",
+    "nullif", "cast", "extract", "position", "overlay",
+    "row_number", "rank", "dense_rank", "ntile", "lag", "lead", "first_value", "last_value", "nth_value",
+    "cume_dist", "percent_rank", "greatest", "least",
+    "stddev", "variance", "stddev_pop", "stddev_samp", "var_pop", "var_samp", "corr", "covar_pop", "covar_samp",
+    "percentile_cont", "percentile_disc", "grouping"
+  ],
+
+  "oracle": [
+    "nvl", "nvl2", "decode", "to_char", "to_date", "to_number", "to_timestamp", "to_timestamp_tz", "trunc", "instr",
+    "lpad", "rpad", "initcap", "translate", "regexp_like", "regexp_substr", "regexp_instr", "regexp_replace",
+    "regexp_count", "listagg", "add_months", "months_between", "last_day", "next_day", "numtodsinterval",
+    "numtoyminterval", "to_dsinterval", "to_yminterval", "median", "ratio_to_report", "bitand", "chr", "ascii",
+    "lengthb", "substrb", "instrb", "lnnvl", "nanvl", "remainder", "width_bucket", "sinh", "cosh", "tanh",
+    "sys_connect_by_path", "ora_hash", "standard_hash", "rawtohex", "hextoraw", "sys_context", "userenv",
+    "json_value", "json_query", "json_exists", "grouping_id", "to_binary_double", "to_binary_float", "dump",
+    "vsize", "nls_upper", "nls_lower", "nls_initcap", "soundex", "from_tz", "sys_extract_utc", "tz_offset",
+    "new_time", "approx_count_distinct", "cardinality", "stats_mode", "to_nchar", "unistr", "asciistr", "nchr",
+    "current_date", "current_timestamp", "localtimestamp", "systimestamp", "sysdate"
+  ],
+
+  "mssql": [
+    "isnull", "len", "datalength", "charindex", "patindex", "left", "right", "replicate", "space", "stuff", "str",
+    "string_agg", "string_split", "concat_ws", "format", "convert", "try_convert", "try_cast", "try_parse", "parse",
+    "iif", "choose", "getdate", "getutcdate", "sysdatetime", "sysutcdatetime", "sysdatetimeoffset", "dateadd",
+    "datediff", "datediff_big", "datepart", "datename", "datefromparts", "datetimefromparts", "datetime2fromparts",
+    "timefromparts", "eomonth", "year", "month", "day", "isdate", "isnumeric", "checksum", "binary_checksum",
+    "hashbytes", "quotename", "reverse", "ascii", "char", "nchar", "unicode", "translate", "square", "pi", "rand",
+    "degrees", "radians", "cot", "json_value", "json_query", "isjson", "openjson", "count_big", "stdev", "stdevp",
+    "var", "varp", "grouping_id", "approx_count_distinct", "generate_series", "db_name", "schema_name",
+    "object_name", "object_id", "col_name", "user_name", "suser_sname", "switchoffset", "todatetimeoffset",
+    "newid", "date_bucket", "datetrunc", "soundex", "difference", "current_timestamp"
+  ],
+
+  "postgresql": [
+    "to_char", "to_date", "to_number", "to_timestamp", "date_trunc", "date_part", "age", "now", "clock_timestamp",
+    "statement_timestamp", "transaction_timestamp", "timeofday", "make_date", "make_time", "make_timestamp",
+    "make_timestamptz", "make_interval", "justify_days", "justify_hours", "justify_interval", "isfinite",
+    "string_agg", "array_agg", "json_agg", "jsonb_agg", "json_object_agg", "jsonb_object_agg", "array_length",
+    "array_to_string", "string_to_array", "unnest", "generate_series", "generate_subscripts", "cardinality",
+    "array_position", "array_positions", "array_remove", "array_replace", "array_cat", "array_append",
+    "array_prepend", "array_ndims", "array_upper", "array_lower", "regexp_replace", "regexp_match",
+    "regexp_matches", "regexp_split_to_array", "regexp_split_to_table", "regexp_count", "regexp_like",
+    "regexp_substr", "regexp_instr", "split_part", "initcap", "lpad", "rpad", "btrim", "left", "right", "repeat",
+    "reverse", "strpos", "starts_with", "translate", "md5", "encode", "decode", "chr", "ascii", "char_length",
+    "character_length", "octet_length", "bit_length", "format", "concat_ws", "quote_ident", "quote_literal",
+    "quote_nullable", "to_json", "to_jsonb", "row_to_json", "array_to_json", "json_build_object",
+    "jsonb_build_object", "json_build_array", "jsonb_build_array", "json_extract_path", "json_extract_path_text",
+    "jsonb_extract_path", "jsonb_extract_path_text", "json_array_length", "jsonb_array_length",
+    "json_array_elements", "jsonb_array_elements", "json_array_elements_text", "jsonb_array_elements_text",
+    "json_each", "jsonb_each", "json_each_text", "jsonb_each_text", "json_object_keys", "jsonb_object_keys",
+    "json_typeof", "jsonb_typeof", "jsonb_pretty", "json_to_record", "jsonb_to_record", "json_to_recordset",
+    "jsonb_to_recordset", "width_bucket", "trunc", "random", "div", "cbrt", "degrees", "radians", "pi", "gcd",
+    "lcm", "num_nonnulls", "num_nulls", "mode", "bool_and", "bool_or", "every", "bit_and", "bit_or", "bit_xor",
+    "regr_slope", "regr_intercept", "regr_count", "regr_r2", "pg_typeof", "version", "current_database",
+    "current_schema", "to_tsvector", "to_tsquery", "plainto_tsquery", "phraseto_tsquery", "websearch_to_tsquery",
+    "ts_rank", "ts_headline", "array", "row", "date", "time", "timestamp", "int4range", "int8range", "numrange",
+    "daterange", "tsrange", "lower_inc", "upper_inc", "isempty", "host", "masklen", "netmask", "family",
+    "current_date", "current_timestamp", "localtimestamp", "uuid_extract_timestamp"
+  ],
+
+  "mysql": [
+    "ifnull", "if", "isnull", "concat_ws", "group_concat", "substring_index", "instr", "locate", "left", "right",
+    "lpad", "rpad", "repeat", "reverse", "char_length", "character_length", "lcase", "ucase", "mid", "strcmp",
+    "field", "find_in_set", "format", "hex", "unhex", "md5", "sha1", "sha2", "crc32", "date_format",
+    "str_to_date", "date_add", "date_sub", "datediff", "timestampdiff", "timestampadd", "now", "curdate",
+    "curtime", "sysdate", "utc_date", "utc_time", "utc_timestamp", "unix_timestamp", "from_unixtime", "year",
+    "month", "day", "dayofmonth", "dayofweek", "dayofyear", "dayname", "monthname", "week", "weekday",
+    "weekofyear", "yearweek", "quarter", "hour", "minute", "second", "microsecond", "last_day", "makedate",
+    "maketime", "date", "time", "timestamp", "convert", "truncate", "rand", "pow", "pi", "degrees", "radians",
+    "cot", "json_extract", "json_unquote", "json_value", "json_object", "json_array", "json_arrayagg",
+    "json_objectagg", "json_length", "json_contains", "json_contains_path", "json_keys", "json_type",
+    "json_valid", "json_search", "json_depth", "json_pretty", "regexp_like", "regexp_replace", "regexp_substr",
+    "regexp_instr", "database", "schema", "version", "bit_and", "bit_or", "bit_xor", "bit_count", "std",
+    "any_value", "inet_ntoa", "inet_aton", "inet6_ntoa", "inet6_aton", "bin", "oct", "conv", "elt", "char",
+    "ascii", "ord", "space", "soundex", "to_days", "from_days", "to_seconds", "adddate", "subdate", "addtime",
+    "subtime", "period_add", "period_diff", "timediff", "time_to_sec", "sec_to_time", "time_format",
+    "convert_tz", "current_date", "current_time", "current_timestamp", "localtime", "localtimestamp", "quote",
+    "weight_string", "octet_length", "bit_length", "export_set", "make_set"
+  ],
+
+  "sqlite": [
+    "ifnull", "iif", "instr", "printf", "format", "hex", "unhex", "quote", "typeof", "unicode", "char", "glob",
+    "like", "likelihood", "likely", "unlikely", "random", "date", "time", "datetime", "julianday", "unixepoch",
+    "strftime", "timediff", "total", "group_concat", "string_agg", "json", "json_extract", "json_array",
+    "json_object", "json_type", "json_valid", "json_each", "json_tree", "json_group_array",
+    "json_group_object", "json_array_length", "json_quote", "sqlite_version", "octet_length", "concat_ws",
+    "pow", "pi", "degrees", "radians", "trunc", "log2", "current_date", "current_time", "current_timestamp"
+  ],
+
+  "duckdb": [
+    "ifnull", "if", "list", "string_agg", "group_concat", "array_agg", "strftime", "strptime", "date_trunc",
+    "date_part", "date_diff", "datediff", "date_add", "date_sub", "datepart", "datetrunc", "epoch", "epoch_ms",
+    "make_date", "make_time", "make_timestamp", "now", "today", "regexp_matches", "regexp_replace",
+    "regexp_extract", "regexp_extract_all", "regexp_full_match", "regexp_split_to_array", "contains",
+    "starts_with", "ends_with", "prefix", "suffix", "strpos", "instr", "left", "right", "lpad", "rpad", "repeat",
+    "reverse", "split_part", "string_split", "str_split", "array_length", "len", "unnest", "generate_series",
+    "range", "try_cast", "typeof", "hash", "md5", "sha256", "median", "mode", "quantile", "quantile_cont",
+    "quantile_disc", "approx_count_distinct", "any_value", "arg_max", "arg_min", "max_by", "min_by", "bool_and",
+    "bool_or", "first", "last", "histogram", "printf", "format", "concat_ws", "random", "trunc", "isnan",
+    "isinf", "isfinite", "json_extract", "json_extract_string", "year", "month", "day", "dayofweek", "dayofyear",
+    "week", "weekofyear", "quarter", "hour", "minute", "second", "monthname", "dayname", "last_day", "age",
+    "lcase", "ucase", "chr", "ascii", "initcap", "translate", "char_length", "character_length", "date",
+    "time", "timestamp", "pi", "degrees", "radians", "cbrt", "pow", "log2", "gcd", "lcm", "bit_count",
+    "count_if", "product", "list_distinct", "list_sort", "list_contains", "array_to_string", "list_aggregate",
+    "current_date", "current_timestamp", "struct_pack", "row", "nullif"
+  ],
+
+  "types": [
+    "varchar", "varchar2", "nvarchar", "nvarchar2", "char", "nchar", "character", "varying", "decimal", "dec",
+    "numeric", "number", "float", "double", "real", "timestamp", "timestamptz", "time", "timetz", "datetime",
+    "datetime2", "datetimeoffset", "smalldatetime", "binary", "varbinary", "raw", "interval", "bit", "string",
+    "int", "integer", "bigint", "smallint", "tinyint", "signed", "unsigned"
+  ]
+}

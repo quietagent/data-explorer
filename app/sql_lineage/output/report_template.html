@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL Lineage report</title>
+<!-- One offline file: no network, no CDN, no web fonts. Data below holds names and SQL text only. -->
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff; --panel: #f6f7f9; --text: #1d2330; --muted: #5d6675; --line: #d9dde3;
+  --accent: #2563eb; --accent-soft: #dbe6fd; --warn: #c2410c; --warn-soft: #fde7da;
+  --ok: #15803d; --code: #f1f3f5; --fade: 0.15;
+  --kind-table: #2563eb; --kind-view: #7c3aed; --kind-written: #0d9488; --kind-unknown: #6b7280;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171c; --panel: #1c2027; --text: #e6e8eb; --muted: #9aa3ae; --line: #2e343d;
+    --accent: #6ea0ff; --accent-soft: #1f2d48; --warn: #fb923c; --warn-soft: #3a2418;
+    --ok: #4ade80; --code: #1a1e24;
+    --kind-table: #6ea0ff; --kind-view: #b48cff; --kind-written: #2dd4bf; --kind-unknown: #9aa3ae;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+       font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+header { padding: 16px 24px; border-bottom: 1px solid var(--line); }
+header h1 { margin: 0 0 4px; font-size: 20px; }
+header .meta { color: var(--muted); font-size: 12px; }
+nav { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+      padding: 6px 24px; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+nav a { color: var(--accent); text-decoration: none; font-size: 13px; }
+main { padding: 8px 24px 48px; max-width: 1400px; }
+section { margin-top: 28px; }
+h2 { font-size: 17px; margin: 0 0 8px; }
+p.note { color: var(--muted); margin: 0 0 10px; font-size: 13px; }
+.cards { display: flex; flex-wrap: wrap; gap: 10px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; min-width: 110px; }
+.card .n { font-size: 22px; font-weight: 600; }
+.card .l { color: var(--muted); font-size: 12px; }
+.card.warn .n { color: var(--warn); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--panel); position: sticky; top: 33px; cursor: default; white-space: nowrap; }
+th.sortable { cursor: pointer; }
+th.sortable::after { content: " \2195"; color: var(--muted); }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+code, pre { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 12px; }
+code { background: var(--code); padding: 1px 4px; border-radius: 4px; word-break: break-word; }
+pre { background: var(--code); padding: 10px; border-radius: 6px; overflow: auto; margin: 6px 0; white-space: pre; }
+details summary { cursor: pointer; color: var(--accent); }
+.tag { display: inline-block; padding: 0 6px; border-radius: 10px; font-size: 11px; background: var(--accent-soft);
+       margin-right: 4px; white-space: nowrap; }
+.tag.warn { background: var(--warn-soft); color: var(--warn); }
+.tag.ok { color: var(--ok); }
+.box { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+.box h3 { margin: 0 0 6px; font-size: 14px; }
+button { font: inherit; font-size: 12px; padding: 3px 10px; border-radius: 6px; border: 1px solid var(--line);
+         background: var(--bg); color: var(--text); cursor: pointer; }
+button:hover { border-color: var(--accent); }
+input[type=text], input[type=search] { font: inherit; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--line);
+         background: var(--bg); color: var(--text); width: min(520px, 100%); }
+ul.uses { margin: 4px 0; padding-left: 18px; }
+.empty { color: var(--muted); font-style: italic; }
+#graph-wrap { display: grid; grid-template-columns: 1fr 320px; gap: 12px; }
+#graph { height: 620px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+#graph-panel { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; max-height: 620px; overflow: auto; }
+#graph-panel li.hit { background: var(--accent-soft); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--muted); margin: 6px 0; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
+h4.impact-step { margin: 14px 0 4px; font-size: 13px; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
+@media (max-width: 900px) { #graph-wrap { grid-template-columns: 1fr; } main, header, nav { padding-left: 12px; padding-right: 12px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>SQL Lineage report</h1>
+  <div class="meta" id="meta"></div>
+</header>
+<nav>
+  <a href="#summary">Summary</a><a href="#catalog">Join catalog</a><a href="#conflicts">Conflicts</a>
+  <a href="#views">Suggested views</a><a href="#nokey">Joins without a key</a><a href="#subqueries">Subquery links</a>
+  <a href="#unreadable">Unreadable</a>
+  <a href="#impact">Impact</a><a href="#graph-section">Graph</a>
+</nav>
+<main>
+  <section id="summary"><h2>Summary</h2><div class="cards" id="cards"></div></section>
+
+  <section id="catalog">
+    <h2>Join catalog</h2>
+    <p class="note">Every distinct join. Click a column header to sort. Open a row's uses to see each statement and line.</p>
+    <input type="search" id="catalog-filter" placeholder="Filter by table or column name">
+    <table id="catalog-table"></table>
+  </section>
+
+  <section id="conflicts">
+    <h2>Conflicts</h2>
+    <p class="note">The same two tables joined on different columns in different places. One variant is often a bug.</p>
+    <div id="conflicts-body"></div>
+  </section>
+
+  <section id="views">
+    <h2>Suggested views</h2>
+    <p class="note">Groups of joins that repeat together. Each draft view is text to check and copy; nothing was run.</p>
+    <div id="views-body"></div>
+  </section>
+
+  <section id="nokey">
+    <h2>Joins without a declared key</h2>
+    <p class="note">Joins the schema does not declare as a foreign key, in either direction.</p>
+    <div id="nokey-body"></div>
+  </section>
+
+  <section id="subqueries">
+    <h2>Subquery links</h2>
+    <p class="note">Columns tied through IN, NOT IN, EXISTS or a correlated subquery. They are not joins, so the catalog,
+      the views, the conflicts and the joins without a key leave them out; they still count for impact.</p>
+    <div id="subqueries-body"></div>
+  </section>
+
+  <section id="unreadable">
+    <h2>Unreadable</h2>
+    <p class="note">Files and statements that could not be read, and names whose table is not certain. Nothing is skipped silently.</p>
+    <div id="unreadable-body"></div>
+  </section>
+
+  <section id="impact">
+    <h2>Impact</h2>
+    <p class="note">Choose a table or a column (TABLE.COLUMN) to see every statement that uses it, and the tables downstream.</p>
+    <input type="text" id="impact-input" list="impact-targets" placeholder="Type a table or column name">
+    <datalist id="impact-targets"></datalist>
+    <div id="impact-body"></div>
+  </section>
+
+  <section id="graph-section">
+    <h2>Graph of tables and joins</h2>
+    <p class="note">Click a table to list the scripts that use it and highlight the tables it joins. Click an empty spot to clear.</p>
+    <div class="legend" id="legend"></div>
+    <label><input type="checkbox" id="show-feeds"> show data flow (a statement reads one table and writes the other)</label>
+    <div id="graph-wrap"><div id="graph"></div><div id="graph-panel"><p class="empty">Nothing selected.</p></div></div>
+  </section>
+</main>
+
+<script type="application/json" id="lineage-data">/*DATA*/</script>
+<script>/*CYTOSCAPE*/</script>
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById("lineage-data").textContent);
+
+// -- small DOM helpers: every value goes in as text, never as HTML ------------
+function el(tag, attrs, ...children) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "class") node.className = v; else if (k === "text") node.textContent = v;
+    else if (k.startsWith("on")) node.addEventListener(k.slice(2), v); else node.setAttribute(k, v);
+  }
+  for (const child of children.flat()) {
+    if (child === null || child === undefined) continue;
+    node.append(child instanceof Node ? child : document.createTextNode(String(child)));
+  }
+  return node;
+}
+const code = (t) => el("code", {text: t});
+const tag = (t, cls) => el("span", {class: "tag" + (cls ? " " + cls : ""), text: t});
+const ref = (u) => `${u.script} #${u.number}` + (u.line ? `, line ${u.line}` : "");
+const empty = (t) => el("p", {class: "empty", text: t});
+function fkTag(value) {
+  if (value === true) return tag("declared FK", "ok");
+  if (value === false) return tag("no declared key", "warn");
+  return tag("not checked");
+}
+function usesList(uses) {
+  return el("ul", {class: "uses"}, uses.map(u => el("li", {},
+    ref(u), u.join_type ? " " : "", u.join_type ? tag(u.join_type) : null,
+    u.via_cte ? " " : "", u.via_cte ? tag("via CTE or subquery") : null)));
+}
+
+// -- header and summary -----------------------------------------------------
+const meta = DATA.meta;
+document.getElementById("meta").textContent =
+  `${meta.folder} · dialect ${meta.dialect} · schema ${meta.schema || "none"}` +
+  (meta.default_schema ? ` · default schema ${meta.default_schema}` : "") + ` · scanned ${meta.scanned_at}` +
+  ` · tool ${meta.tool_version}, sqlglot ${meta.sqlglot_version}`;
+const S = DATA.summary;
+const cards = [["files", S.files], ["statements", S.statements], ["unreadable", S.unreadable, S.unreadable > 0],
+  ["tables", S.tables], ["joins", S.joins], ["conflicts", S.conflicts, S.conflicts > 0],
+  ["repeated groups", S.groups], ["subquery links", S.subquery_links],
+  ["unknown names", S.unknown_names, S.unknown_names > 0],
+  ["joins without key", S.joins_without_key === null ? "–" : S.joins_without_key, S.joins_without_key > 0]];
+document.getElementById("cards").append(...cards.map(([label, n, warn]) =>
+  el("div", {class: "card" + (warn ? " warn" : "")}, el("div", {class: "n", text: n}), el("div", {class: "l", text: label}))));
+
+// -- join catalog (sortable) -------------------------------------------------
+const catalogColumns = [
+  ["Join", r => r.key, "text"], ["Types", r => r.types.join(", "), "text"],
+  ["Statements", r => r.statements, "num"], ["Scripts", r => r.scripts.length, "num"],
+  ["Key", r => r.declared_fk === true ? 2 : r.declared_fk === false ? 0 : 1, "num"],
+  ["Uses", r => 0, "none"]];
+let catalogSort = {index: 2, down: true};
+function renderCatalog() {
+  const table = document.getElementById("catalog-table");
+  const filter = document.getElementById("catalog-filter").value.trim().toUpperCase();
+  const rows = DATA.catalog.filter(r => !filter || r.key.toUpperCase().includes(filter));
+  const [, get, kind] = catalogColumns[catalogSort.index];
+  rows.sort((a, b) => {
+    const x = get(a), y = get(b);
+    const c = kind === "num" ? x - y : String(x).localeCompare(String(y));
+    return (catalogSort.down ? -c : c) || a.key.localeCompare(b.key);
+  });
+  table.replaceChildren(
+    el("thead", {}, el("tr", {}, catalogColumns.map(([name, , kind], i) => el("th", {
+      class: kind === "none" ? "" : "sortable", text: name,
+      onclick: kind === "none" ? null : () => {
+        catalogSort = {index: i, down: catalogSort.index === i ? !catalogSort.down : kind === "num"};
+        renderCatalog();
+      }})))),
+    el("tbody", {}, rows.map(r => el("tr", {},
+      el("td", {}, code(r.key), r.derived ? tag("derived") : null, r.non_key ? tag("non-key", "warn") : null),
+      el("td", {}, r.types.map(t => tag(t))),
+      el("td", {class: "num", text: r.statements}),
+      el("td", {class: "num", text: r.scripts.length}),
+      el("td", {}, fkTag(r.declared_fk)),
+      el("td", {}, el("details", {}, el("summary", {text: `${r.uses.length} uses`}), usesList(r.uses)))))));
+  if (!rows.length) table.append(el("tbody", {}, el("tr", {}, el("td", {colspan: 6}, empty("No joins.")))));
+}
+document.getElementById("catalog-filter").addEventListener("input", renderCatalog);
+renderCatalog();
+
+// -- conflicts ---------------------------------------------------------------
+const conflictsBody = document.getElementById("conflicts-body");
+if (!DATA.conflicts.length) conflictsBody.append(empty("No conflicts found."));
+for (const c of DATA.conflicts) {
+  conflictsBody.append(el("div", {class: "box"}, el("h3", {text: `${c.table1} and ${c.table2}: ${c.variants.length} different joins`}),
+    c.variants.map(v => el("div", {}, code(v.key), " ", fkTag(v.declared_fk),
+      ` ${v.statements} statement(s)`, usesList(v.uses)))));
+}
+
+// -- suggested views ---------------------------------------------------------
+function copyText(text, button) {
+  const done = () => { button.textContent = "Copied"; setTimeout(() => button.textContent = "Copy SQL", 1500); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  } else fallbackCopy(text, done);
+}
+function fallbackCopy(text, done) {
+  const area = el("textarea", {}); area.value = text; document.body.append(area); area.select();
+  try { document.execCommand("copy"); done(); } finally { area.remove(); }
+}
+const viewsBody = document.getElementById("views-body");
+if (!DATA.groups.length) viewsBody.append(empty(
+  `No group of joins repeats in ${meta.settings.MIN_GROUP_STATEMENTS} or more statements from ${meta.settings.MIN_GROUP_SCRIPTS} or more scripts.`));
+for (const g of DATA.groups) {
+  const button = el("button", {text: "Copy SQL"});
+  button.addEventListener("click", () => copyText(g.sql, button));
+  viewsBody.append(el("div", {class: "box"},
+    el("h3", {}, code(g.name), ` · ${g.joins.length} joins in ${g.statements} statements from ${g.scripts.length} scripts`),
+    el("div", {}, g.joins.map(j => el("div", {}, code(j)))),
+    el("pre", {text: g.sql}), button,
+    el("details", {}, el("summary", {text: "Statements that could use it"}), usesList(g.uses))));
+}
+
+// -- joins without a declared key -------------------------------------------------
+const nokeyBody = document.getElementById("nokey-body");
+if (DATA.joins_without_key === null) nokeyBody.append(empty("No schema was given, so keys were not checked."));
+else if (!DATA.joins_without_key.length) nokeyBody.append(empty("Every join matches a declared foreign key."));
+else nokeyBody.append(el("table", {},
+  el("thead", {}, el("tr", {}, ["Join", "Types", "Statements", "Uses"].map(h => el("th", {text: h})))),
+  el("tbody", {}, DATA.joins_without_key.map(r => el("tr", {},
+    el("td", {}, code(r.key), r.non_key ? tag("non-key", "warn") : null),
+    el("td", {}, r.types.map(t => tag(t))), el("td", {class: "num", text: r.statements}),
+    el("td", {}, el("details", {}, el("summary", {text: `${r.uses.length} uses`}), usesList(r.uses))))))));
+
+// -- subquery links ------------------------------------------------------------
+const subqueriesBody = document.getElementById("subqueries-body");
+if (!DATA.subquery_links.length) subqueriesBody.append(empty("No subquery links."));
+else subqueriesBody.append(el("table", {},
+  el("thead", {}, el("tr", {}, ["Link", "Kinds", "Statements", "Uses"].map(h => el("th", {text: h})))),
+  el("tbody", {}, DATA.subquery_links.map(r => el("tr", {},
+    el("td", {}, code(r.key), r.derived ? tag("derived") : null),
+    el("td", {}, r.kinds.map(k => tag(k))), el("td", {class: "num", text: r.statements}),
+    el("td", {}, el("details", {}, el("summary", {text: `${r.uses.length} uses`}),
+      el("ul", {class: "uses"}, r.uses.map(u => el("li", {}, ref(u), " ", tag(u.kind)))))))))));
+
+// -- unreadable and unknown names -----------------------------------------------
+const unreadableBody = document.getElementById("unreadable-body");
+unreadableBody.append(el("h3", {text: `Not read (${DATA.unreadable.length})`}));
+if (!DATA.unreadable.length) unreadableBody.append(empty("Everything was read."));
+else unreadableBody.append(el("table", {},
+  el("thead", {}, el("tr", {}, ["Script", "Statement", "Lines", "Type", "Reason", "Text"].map(h => el("th", {text: h})))),
+  el("tbody", {}, DATA.unreadable.map(r => el("tr", {},
+    el("td", {}, code(r.script)), el("td", {class: "num", text: r.number ?? "file"}),
+    el("td", {text: r.first_line ? `${r.first_line}–${r.last_line}` : ""}), el("td", {text: r.type}),
+    el("td", {text: r.reason}),
+    el("td", {}, r.text ? el("details", {}, el("summary", {text: "show"}), el("pre", {text: r.text})) : null))))));
+unreadableBody.append(el("h3", {text: `Names not resolved (${DATA.unknowns.length})`}));
+if (!DATA.unknowns.length) unreadableBody.append(empty("Every name was resolved."));
+else unreadableBody.append(el("table", {},
+  el("thead", {}, el("tr", {}, ["Script", "Statement", "Line", "Kind", "Name", "Reason"].map(h => el("th", {text: h})))),
+  el("tbody", {}, DATA.unknowns.map(u => el("tr", {},
+    el("td", {}, code(u.script)), el("td", {class: "num", text: u.number}), el("td", {class: "num", text: u.line}),
+    el("td", {text: u.kind}), el("td", {}, code(u.name)), el("td", {text: u.reason}))))));
+const notInSchema = DATA.not_in_schema;
+if (notInSchema) {
+  unreadableBody.append(el("h3", {text: `Not in the schema (${notInSchema.tables.length} tables, ${notInSchema.columns.length} columns)`}));
+  if (!notInSchema.tables.length && !notInSchema.columns.length) unreadableBody.append(empty("Every name is in the schema."));
+  else unreadableBody.append(el("p", {},
+    notInSchema.tables.map(t => el("span", {}, code(t.key), " ", tag(t.kind), " ")),
+    el("br"), notInSchema.columns.map(c => el("span", {}, code(c), " "))));
+}
+
+// -- impact picker -----------------------------------------------------------
+const targets = Object.keys(DATA.impacts).sort();
+document.getElementById("impact-targets").append(...targets.map(t => el("option", {value: t})));
+function renderImpact() {
+  const body = document.getElementById("impact-body");
+  const typed = document.getElementById("impact-input").value.trim();
+  const key = DATA.impacts[typed] ? typed : targets.find(t => t.toUpperCase() === typed.toUpperCase());
+  if (!key) { body.replaceChildren(typed ? empty(`'${typed}' is not a table or column of this scan.`) : ""); return; }
+  const r = DATA.impacts[key];
+  // One heading per level, all at the same depth: levels go by script, so they are not a tree.
+  const parts = [el("h3", {text: `Impact of ${r.kind} ${key}`}),
+    el("h4", {class: "impact-step", text: `Direct (${r.direct.length} uses)`}),
+    el("div", {}, "Table: ", code(r.table))];
+  parts.push(r.direct.length ? el("ul", {class: "uses"}, r.direct.map(d =>
+    el("li", {}, `${d.script} #${d.number}, line ${d.line}: `, tag(d.role), " ", code(d.item)))) : empty("none"));
+  if (!r.levels.length) parts.push(empty("Downstream: none, the scripts above write no other table."));
+  for (const level of r.levels) {
+    const count = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+    parts.push(el("h4", {class: "impact-step", text: `Level ${level.level} (${count(level.tables.length, "table")}, ${count(level.statements.length, "statement")})`}),
+      el("div", {}, "Tables:"),
+      el("ul", {class: "uses"}, level.tables.map(t => el("li", {}, code(t.table), ` written by ${t.written_by.join(", ")}`))),
+      el("div", {}, "Statements that read them:"),
+      el("ul", {class: "uses"}, level.statements.map(s => el("li", {}, `${s.ref}: reads `,
+        s.reads.flatMap((t, i) => [i ? ", " : "", code(t)])))));
+  }
+  if (r.stopped) parts.push(el("p", {class: "note", text: "Stopped at IMPACT_MAX_DEPTH levels."}));
+  if (r.unreadable.length || r.unreadable_elsewhere) {
+    parts.push(el("h4", {class: "impact-step", text: "Not read, so not in the lists above"}));
+    parts.push(el("ul", {class: "uses"}, r.unreadable.map(x => el("li", {text: x})),
+      r.unreadable_elsewhere ? el("li", {text: `and ${r.unreadable_elsewhere} more statement(s) in other scripts (see Unreadable)`}) : null));
+  }
+  body.replaceChildren(...parts);
+}
+document.getElementById("impact-input").addEventListener("input", renderImpact);
+
+// -- graph -------------------------------------------------------------------
+const css = getComputedStyle(document.documentElement);
+const color = (name) => css.getPropertyValue(name).trim();
+const kindColor = {"table": color("--kind-table"), "view": color("--kind-view"),
+  "written by a script": color("--kind-written"), "unknown": color("--kind-unknown")};
+document.getElementById("legend").append(
+  ...Object.entries(kindColor).map(([k, c]) => el("span", {}, el("i", {style: `background:${c}`}), k)),
+  el("span", {text: "solid line: declared FK · dashed: no declared key · red: conflict or non-key"}));
+const elements = [];
+for (const t of DATA.graph.tables) elements.push({group: "nodes", data: {id: "t:" + t.key, label: t.key, kind: t.kind,
+  color: kindColor[t.kind] || kindColor.unknown, missing: t.in_schema === false ? 1 : 0}});
+DATA.graph.joins.forEach((j, i) => elements.push({group: "edges", data: {id: "j" + i, source: "t:" + j.table1,
+  target: "t:" + j.table2, key: j.key, width: 1 + Math.min(6, j.statements), declared: j.declared_fk === true ? 1 : 0,
+  warn: (j.conflict || j.non_key) ? 1 : 0, index: i}}));
+DATA.graph.feeds.forEach(([a, b], i) => elements.push({group: "edges", classes: "feed",
+  data: {id: "f" + i, source: "t:" + a, target: "t:" + b}}));
+let cy = null;
+if (window.cytoscape && DATA.graph.tables.length) {
+  cy = cytoscape({
+    container: document.getElementById("graph"), elements,
+    style: [
+      {selector: "node", style: {"background-color": "data(color)", "label": "data(label)", "color": color("--text"),
+        "font-size": 10, "text-valign": "bottom", "text-margin-y": 3, "width": 18, "height": 18,
+        "text-background-color": color("--panel"), "text-background-opacity": 0.8, "text-background-padding": 2}},
+      {selector: "node[missing = 1]", style: {"border-width": 2, "border-style": "dashed", "border-color": color("--warn")}},
+      {selector: "edge", style: {"width": "data(width)", "line-color": color("--muted"), "curve-style": "bezier", "opacity": 0.8}},
+      {selector: "edge[declared = 0]", style: {"line-style": "dashed"}},
+      {selector: "edge[warn = 1]", style: {"line-color": color("--warn")}},
+      {selector: "edge.feed", style: {"line-color": color("--kind-written"), "target-arrow-shape": "triangle",
+        "target-arrow-color": color("--kind-written"), "width": 1, "line-style": "dotted", "display": "none"}},
+      {selector: ".faded", style: {"opacity": 0.12}},
+      {selector: "node.hit", style: {"border-width": 3, "border-color": color("--accent")}},
+    ],
+    layout: {name: "cose", animate: false, randomize: true, padding: 30, nodeRepulsion: 30000,
+      idealEdgeLength: 70, edgeElasticity: 100, gravity: 0.6, numIter: 2500, componentSpacing: 60},
+  });
+  cy.on("tap", "node", (event) => selectTable(event.target.data("label")));
+  cy.on("tap", "edge", (event) => { if (!event.target.hasClass("feed")) selectJoin(DATA.graph.joins[event.target.data("index")]); });
+  cy.on("tap", (event) => { if (event.target === cy) clearSelection(); });
+} else if (!DATA.graph.tables.length) {
+  document.getElementById("graph").append(empty("No tables."));
+}
+document.getElementById("show-feeds").addEventListener("change", (event) => {
+  if (cy) cy.edges(".feed").style("display", event.target.checked ? "element" : "none");
+});
+function clearSelection() {
+  if (cy) cy.elements().removeClass("faded hit");
+  document.getElementById("graph-panel").replaceChildren(empty("Nothing selected."));
+}
+function selectTable(key) {
+  const info = DATA.graph.tables.find(t => t.key === key);
+  if (cy) {
+    const node = cy.getElementById("t:" + key);
+    const near = node.closedNeighborhood();
+    cy.elements().addClass("faded"); near.removeClass("faded"); cy.nodes().removeClass("hit"); node.addClass("hit");
+  }
+  document.getElementById("graph-panel").replaceChildren(
+    el("h3", {}, code(key)), el("p", {}, tag(info.kind), info.in_schema === false ? tag("not in schema", "warn") : null),
+    el("p", {}, el("b", {text: `Used by ${info.scripts.length} script(s)`})),
+    el("ul", {class: "uses"}, info.scripts.map(s => el("li", {class: "hit"}, code(s.script), ` statements ${s.numbers.join(", ")}`))));
+}
+const catalogByKey = Object.fromEntries(DATA.catalog.map(r => [r.key, r]));
+function selectJoin(join) {
+  if (cy) { cy.elements().addClass("faded"); const e = cy.edges().filter(x => x.data("key") === join.key);
+    e.removeClass("faded"); e.connectedNodes().removeClass("faded"); }
+  document.getElementById("graph-panel").replaceChildren(el("h3", {}, code(join.key)),
+    el("p", {}, fkTag(join.declared_fk), join.non_key ? tag("non-key", "warn") : null, join.conflict ? tag("conflict", "warn") : null),
+    el("p", {text: `${join.statements} statement(s)`}), usesList(catalogByKey[join.key].uses));
+}
+</script>
+</body>
+</html>
